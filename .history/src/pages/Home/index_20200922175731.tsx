@@ -15,7 +15,7 @@ const Home: React.FC = props => {
           <ArticleList htag={htag}></ArticleList>
         </Col>
         <Col span={7}>
-          <HomeTags click={clickTag}></HomeTags> 
+          <HomeTags click={clickTag}></HomeTags>
         </Col>
       </Row>
     </>
