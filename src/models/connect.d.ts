@@ -13,7 +13,8 @@ export { ArtState,UserState,GlobalState,WriteState };
 export interface Loading {
   effects: { [key: string]: boolean | undefined };
   models: {
-    article:boolean
+    article:boolean,
+    user:boolean
   };
 }
 

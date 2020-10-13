@@ -1,0 +1,48 @@
+.headerbox{
+  display: flex;
+  width:100%;
+  background:#fff;
+  margin-bottom:10px;
+  box-shadow: 0 0 1px 1px #eee;
+  border-radius: 4px;
+  padding:30px;
+  .avatar{
+    justify-content: center;
+    margin-right: 30px;
+  }
+  .info{
+    flex:3;
+    display: flex;
+    flex-direction: column;
+    .infoicon{
+      margin-right:5px;
+      font-size: 16px;
+    }
+    .name{
+      height:32px;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 32px;
+      color:#000;
+      margin-bottom:10px;
+    }
+    .profession{
+      color:#777;
+    }
+    .summary{
+      color:#777;
+    }
+  }
+  .opts{
+    flex:1;
+    position: relative;
+    .settingInfo{
+      position: absolute;
+      right:0;
+      top:0;
+      font-size: 18px;
+      color:#666;
+      cursor: pointer;
+    }
+  }
+}

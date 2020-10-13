@@ -8,7 +8,8 @@ import {
   register,
   login, 
   getUserInfo,
-  updateUserInfo
+  updateUserInfo,
+  userArts
 } from '@/service/user'
 import { pageLogin, setToken } from '@/utils/utils'
 import { Effect, Reducer, history } from 'umi'
@@ -25,6 +26,7 @@ const initUser = () => {
 
 export interface UserState {
   userInfo: object;
+  userArts:any[]
 }
 
 export interface UserType {
@@ -36,9 +38,12 @@ export interface UserType {
     userinfo: Effect;
     signout:Effect;
     updateUser:Effect;
+    getuserarts:Effect;
+    moreuserarts:Effect;
   };
   reducers: {
     save: Reducer<UserState>;
+    saveArt: Reducer<any>;
   };
 }
 
@@ -46,6 +51,7 @@ const UserModel: UserType = {
   namespace: 'user',
   state: {
     userInfo: initUser(),
+    userArts:[]
   },
   effects: {
     *signup({ payload }, { call }) {
@@ -96,11 +102,39 @@ const UserModel: UserType = {
           message.success('更新成功！')
         }
     },
+    *getuserarts({ payload, callback }, { call, put }) {
+      const { data } = yield call(userArts, payload)
+      yield put({
+        type: 'save',
+        payload: {
+          userArts: data.articles,
+        },
+      });
+      if (callback) {
+        callback(data)
+      }
+    },
+    *moreuserarts({ payload, callback }, { call, put }) {
+      const { data } = yield call(userArts, payload)
+      yield put({
+        type: 'saveArt',
+        payload: {
+          userArts: data.articles,
+        },
+      });
+      if (callback) {
+        callback(data)
+      }
+    },
   },
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload }
-    }
+    },
+    saveArt(state: UserState, { payload }) {
+      const arr = [...state.userArts, ...payload.userArts]
+      return { ...state, userArts: arr }
+    },
   },
 }
 

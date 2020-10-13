@@ -2,7 +2,7 @@
  * @Author: sizhou
  * @Date: 2020-09-08 17:19:28
  * @LastEditors: sizhou
- * @LastEditTime: 2020-09-15 19:33:25
+ * @LastEditTime: 2020-10-13 16:35:55
  */
 import { defineConfig } from 'umi';
 
@@ -24,6 +24,9 @@ export default defineConfig({
           '../wrappers/auth',
         ],},
         { path: '/settings', component: '../pages/Settings/index',wrappers: [
+          '../wrappers/auth',
+        ], },
+        { path: '/userPage', component: '../pages/User/index',wrappers: [
           '../wrappers/auth',
         ], }
       ]

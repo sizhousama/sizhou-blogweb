@@ -36,7 +36,7 @@ const UserAvatar: React.FC<ComHeaderProps> = props => {
       history.push('/');
     }
     if (key === '2') {
-      history.push('/');
+      history.push('/userPage');
     }
     if (key === '3') {
       history.push('/settings');
