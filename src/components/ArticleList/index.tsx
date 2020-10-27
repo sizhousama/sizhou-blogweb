@@ -17,18 +17,25 @@ import { ArtState, Loading } from '@/models/connect';
 interface ArticleListProps {
   dispatch: Dispatch;
   article: ArtState;
-  htag:string;
+  htag:number|null;
   loading?: boolean;
+}
+interface Params {
+  page:number;
+  size:number;
+  category:number|null;
+  tag:number|null;
+  orderType:string;
 }
 
 const ArticleList: React.FC<ArticleListProps> = props => {
   const { dispatch, loading, article,htag } = props;
   const { arts, cats,curCat } = article;
-  const pref = useRef({
+  const pref = useRef<Params>({
     page: 1,
     size: 10,
-    category:'',
-    tag: '',
+    category:null,
+    tag: null,
     orderType: 'createdAt',
   });
   useEffect(() => {
@@ -48,11 +55,11 @@ const ArticleList: React.FC<ArticleListProps> = props => {
       type: 'article/articles',
       payload: pref.current,
       callback(res) {
-        // if(res.data.length)
+
       },
     });
   };
-  const catChange = (catid:string,tagid:string)=>{
+  const catChange = (catid:number|null,tagid:number|null)=>{
     pref.current.category = catid
     pref.current.tag = tagid
     dispatch({

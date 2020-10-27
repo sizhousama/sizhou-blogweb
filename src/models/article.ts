@@ -2,7 +2,7 @@
  * @Author: sizhou
  * @Date: 2020-09-08 20:44:27
  * @LastEditors: sizhou
- * @LastEditTime: 2020-09-21 18:00:39
+ * @LastEditTime: 2020-10-22 16:09:19
  */
 import {
   getArticles,
@@ -15,8 +15,8 @@ export interface ArtState {
   arts: any[];
   cats: any[];
   homeTags:any[];
-  curCat:string;
-  curTag:string;
+  curCat:number|null;
+  curTag:number|null;
 }
 
 export interface ArticleType {
@@ -43,8 +43,8 @@ const ArticleModel: ArticleType = {
     arts: [],
     cats: [],
     homeTags:[],
-    curCat:'',
-    curTag:''
+    curCat:null,
+    curTag:null
   },
   effects: {
     *categories({ callback }, { call, put }) {
@@ -87,8 +87,8 @@ const ArticleModel: ArticleType = {
         callback(data)
       }
     },
-    *getHomeTags({ callback }, { call, put }) {
-      const { data } = yield call(getTags)
+    *getHomeTags({ payload, callback }, { call, put }) {
+      const { data } = yield call(getTags,payload)
       yield put({
         type: 'save',
         payload: {

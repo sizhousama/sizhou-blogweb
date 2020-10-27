@@ -52,7 +52,7 @@ const ComHeader: React.FC<ComHeaderProps> = props => {
         </Menu>
       </div>
       <div className={`fl_1 ${styles.barRight}`}>
-        <Button className={styles.writebtn} onClick={()=>history.push(`${userInfo!==''?'/write':'/login'}`)} type="primary">
+        <Button className={styles.writebtn} onClick={()=>history.push(`${userInfo!==''?'/write/new':'/login'}`)} type="primary">
           写文章
         </Button>
         {userInfo!=='' ? 

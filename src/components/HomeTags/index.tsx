@@ -22,8 +22,8 @@ const HomeTags: React.FC<HomeTagsProps> = props => {
     dispatch({ type: 'article/getHomeTags' });
   };
   const clickTag = (id:number)=>{
-    dispatch({type:'article/setCurTag',payload:{id:String(id)}})
-    click(String(id))
+    dispatch({type:'article/setCurTag',payload:{id}})
+    click(id)
   }
   return (
     <>

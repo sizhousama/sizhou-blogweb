@@ -2,7 +2,7 @@
  * @Author: sizhou
  * @Date: 2020-09-08 17:19:28
  * @LastEditors: sizhou
- * @LastEditTime: 2020-10-13 16:35:55
+ * @LastEditTime: 2020-10-23 11:35:47
  */
 import { defineConfig } from 'umi';
 
@@ -12,7 +12,7 @@ export default defineConfig({
   routes: [
     { path: '/register', component: '../pages/Register/index' },
     { path: '/login', component: '../pages/Login/index' },
-    { path: '/write', component: '../pages/Write/index' },
+    { path: '/write/:id', component: '../pages/Write/index' },
     {
       path: '/',
       component: '../layouts/index',
@@ -27,6 +27,9 @@ export default defineConfig({
           '../wrappers/auth',
         ], },
         { path: '/userPage', component: '../pages/User/index',wrappers: [
+          '../wrappers/auth',
+        ], },
+        { path: '/drafts', component: '../pages/Draft/index',wrappers: [
           '../wrappers/auth',
         ], }
       ]

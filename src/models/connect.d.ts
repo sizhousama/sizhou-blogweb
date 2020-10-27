@@ -8,12 +8,14 @@ import { ArtState } from './article';
 import {UserState} from './user'
 import {WriteState} from './write'
 import {GlobalState} from './global'
-export { ArtState,UserState,GlobalState,WriteState };
+import {DraftState} from './draft'
+export { ArtState,UserState,GlobalState,WriteState,DraftState };
 
 export interface Loading {
   effects: { [key: string]: boolean | undefined };
   models: {
     article:boolean,
+    draft:boolean,
     user:boolean
   };
 }

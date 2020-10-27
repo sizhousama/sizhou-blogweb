@@ -2,7 +2,7 @@
  * @Author: sizhou
  * @Date: 2020-09-11 15:59:27
  * @LastEditors: sizhou
- * @LastEditTime: 2020-09-12 18:26:36
+ * @LastEditTime: 2020-10-23 15:38:19
  */
 import { history } from 'umi'
 import storageHelper from '@/utils/storage'
@@ -14,11 +14,11 @@ export const getToken = () => {
   return Cookies.get(TokenKey)
 }
 
-export const setToken = (token:string)=> {
+export const setToken = (token: string) => {
   return Cookies.set(TokenKey, token)
 }
 
-export const removeToken = ()=> {
+export const removeToken = () => {
   return Cookies.remove(TokenKey)
 }
 

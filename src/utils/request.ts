@@ -47,13 +47,13 @@ const errorHandler = (error: { response: any }): Response => {
   const { response } = error;
   console.log('errorhandler:', error)
   let errortext = codeMessage[response.status] || response.message;
-  const { status } = response;
+  const { code } = response;
   const token = getToken()
-  if (status === 400 && !token) {
+  if (code === 400 && !token) {
     errortext = '用户名或密码错误'
     message.error(errortext);
   }
-  if (status === 401) {
+  if (code === 401) {
     errortext = `登录已过期，请重新登录`
     message.error(errortext);
     pageLogin()
@@ -68,7 +68,7 @@ const request = extend({
 });
 
 // request拦截器, 改变url 或 options.
-request.interceptors.request.use((url:string, options:any) => {
+request.interceptors.request.use((url: string, options: any) => {
   const token = getToken()
   const headers = token ? {
     'Content-Type': 'application/json',
@@ -88,14 +88,14 @@ request.interceptors.request.use((url:string, options:any) => {
 // response拦截器, 处理response
 request.interceptors.response.use(async (response: any): Promise<any> => {
   let obj = {}
-  await response.clone().json().then((res:any) => {
-    const { data,status, msg } = res
+  await response.clone().json().then((res: any) => {
+    const { code, status, msg } = res
     if (status !== 1) {
       message.error(msg)
-    }
-    if (status === 401) {
-      pageLogin()
-      window.location.reload()
+      if (code && code === 401) {
+        pageLogin()
+        window.location.reload()
+      }
     }
     obj = res
   })

@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef,useCallback } from 'react';
+import Markdown from '@/components/Markdown';
+import UserAvatar from '@/components/UserAvatar';
+import PublishAddTag from '@/components/PublishAddTag';
+import SettingCoverImg from '@/components/SettingCoverImg';
+import { getCategories } from '@/service/home';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'dva';
-import { WriteState } from '@/models/connect';
+import { WriteState, DraftState, ArtState } from '@/models/connect';
 import { Dispatch } from 'umi';
-import moment from 'moment';
 import {
   Input,
   Row,
@@ -11,12 +15,9 @@ import {
   Button,
   Popover,
   Tag,
-  Dropdown,
-  Menu,
-  Drawer,
-  List,
   Modal,
   Table,
+  message,
 } from 'antd';
 import {
   CaretDownOutlined,
@@ -24,18 +25,26 @@ import {
   QuestionCircleOutlined,
   VerticalAlignTopOutlined,
 } from '@ant-design/icons';
-import { history, Link } from 'umi';
+import { history } from 'umi';
 import MathJax from 'react-mathjax';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import Markdown from '@/components/Markdown';
-import UserAvatar from '@/components/UserAvatar';
 
 import styles from './index.less';
+
 const { TextArea } = Input;
+const { CheckableTag } = Tag;
 interface WriteProps {
   dispatch: Dispatch;
   write: WriteState;
+  draft: DraftState;
+  match: any;
 }
+interface Draft {
+  id: number;
+  markdown: string;
+  title: string;
+}
+// 定义快捷方式
 const ShortCutKey = () => {
   const columns = [
     {
@@ -115,24 +124,82 @@ const ShortCutKey = () => {
   );
 };
 const Write: React.FC<WriteProps> = props => {
-  const { dispatch, write } = props;
+  const { dispatch, write, draft } = props;
   const { markdown, title } = write;
+  const { draftDetail } = draft;
+  const [saveTips, setSaveTips] = useState('文章将会自动保存至');
+  const [selectCat, setSelectCat] = useState(null);
+  const [selectTagId, setSelectTagId] = useState<number>();
+  const [categorys, setCategorys] = useState<any[]>([]);
   const [mdshow, setMdshow] = useState(true);
   const [showPublish, setShowPublish] = useState(false);
   const inputRef = useRef<any>();
   const textAreaRef = useRef<any>();
 
+  useEffect(() => {
+    initCats();
+    initDraft();
+    return function() {
+      clearDraft();
+    };
+  }, []);
+  const initCats = () => {
+    getCategories().then(res => {
+      const { data } = res;
+      setCategorys(data.slice());
+      setSelectCat(data[0].id);
+    });
+  };
+  const initDraft = () => {
+    const params = props.match.params.id;
+    if (params === 'new') {
+      createDraft();
+    } else {
+      const payload = { id: params };
+      dispatch({
+        type: 'draft/draft',
+        payload,
+        callback(data: Draft) {
+          const { markdown, title } = data;
+          dispatch({ type: 'write/setMarkdown', payload: { markdown } });
+          dispatch({ type: 'write/setTitle', payload: { title } });
+        },
+      });
+    }
+  };
+  const createDraft = () => {
+    if (dispatch) {
+      const payload = { title: '', markdown: '' };
+      dispatch({
+        type: 'draft/adddraft',
+        payload,
+        callback(data: Draft) {
+          dispatch({ type: 'draft/save', payload: { draftDetail: data } });
+          dispatch({ type: 'write/setMarkdown', payload: { markdown:'' } });
+          dispatch({ type: 'write/setTitle', payload: { title:'' } });
+          history.push(`/write/${data.id}`);
+        },
+      });
+    }
+  };
+  const clearDraft = () => {
+    dispatch({ type: 'draft/save', payload: { draftDetail: '' } });
+  };
   const onChangeMarkdown = (e: any) => {
+    const markdown = e.target.value;
+    saveDraft(title, markdown);
     if (dispatch) {
       dispatch({
         type: 'write/setMarkdown',
-        payload: { markdown: e.target.value },
+        payload: { markdown },
       });
     }
   };
   const onChangeTitle = (e: any) => {
+    const title = e.target.value;
+    saveDraft(title, markdown);
     if (dispatch) {
-      dispatch({ type: 'write/setTitle', payload: { title: e.target.value } });
+      dispatch({ type: 'write/setTitle', payload: { title } });
     }
   };
   const setMarkdown = (el: any, data: any, start: any, num: number) => {
@@ -227,6 +294,38 @@ const Write: React.FC<WriteProps> = props => {
         break;
     }
   };
+  // 防抖hooks
+  const useDebounce = (fn:any, delay:number, dep = [])=> { 
+    const { current } = useRef<{fn:any;timer:any}>({ fn, timer: null });
+    useEffect(function () {
+      current.fn = fn;
+    }, [fn]);
+  
+    return useCallback(function f(...args) {
+      if (current.timer) {
+        clearTimeout(current.timer);
+      }
+      current.timer = setTimeout(() => {
+        current.fn.call(this, ...args);
+      }, delay);
+    }, dep)
+  }
+  const saveDraft =  useDebounce((title: string, markdown: string) =>{
+    setSaveTips('正在保存至');
+    const { id } = draftDetail;
+    const payload = {
+      id,
+      title,
+      markdown,
+    };
+    dispatch({
+      type: 'draft/updraft',
+      payload,
+      callback(data) {
+        setSaveTips('已保存至');
+      },
+    });
+  },500);
 
   const togglePut = () => {
     setMdshow(!mdshow);
@@ -261,9 +360,16 @@ const Write: React.FC<WriteProps> = props => {
                 className={`cp mr_20 ${styles.normalIcon}`}
               />
             </Popover>
-            <Button className="mr_20" type="primary">
-              保存草稿
-            </Button>
+            <div className={`fl ${styles.saveDraft}`}>
+              <span className={styles.tip}>{saveTips}</span>
+              <Button
+                type="primary"
+                className='mr_20'
+                onClick={()=>history.push('/drafts')}
+              >
+                草稿箱
+              </Button>
+            </div>
             <Button
               className="mr_20"
               type="primary"
@@ -328,7 +434,7 @@ const Write: React.FC<WriteProps> = props => {
         <Col span={mdshow ? 12 : 0}>
           <div style={{ height: '100%', background: '#fff', padding: 20 }}>
             <div className="markdown-body">
-              <MathJax.Provider input="tex">
+              <MathJax.Provider>
                 <Markdown markdown={markdown} />
               </MathJax.Provider>
             </div>
@@ -345,35 +451,29 @@ const Write: React.FC<WriteProps> = props => {
         cancelText="取消"
       >
         <div>
-          <h4 style={{ marginBottom: 16 }}>分类</h4>
+          <h4 style={{ marginBottom: 10 }}>分类</h4>
           <div>
-            {/* {categories &&
-          categories.map(category => (
-            <CheckableTag
-              key={category.en_name}
-              checked={category.id === selectedCategory}
-              onChange={selected => checkCategorysHandle(category)}
-            >
-              {category.name}
-            </CheckableTag>
-          ))} */}
+            {categorys &&
+              categorys.map(cat => (
+                <CheckableTag
+                  key={cat.en_name}
+                  checked={cat.id === selectCat}
+                  onChange={() => setSelectCat(cat.id)}
+                >
+                  {cat.name}
+                </CheckableTag>
+              ))}
           </div>
-          <h4 style={{ marginBottom: 16, marginTop: 10 }}>标签</h4>
+          <h4 style={{ marginBottom: 10, marginTop: 10 }}>标签</h4>
           <div>
-            {/* {tags &&
-          tags.map(tag => (
-            <CheckableTag
-              key={tag.en_name}
-              checked={tag.id === selectedTag}
-              onChange={() => checkTagHandle(tag)}
-            >
-              {tag.name}
-            </CheckableTag>
-          ))} */}
+            <PublishAddTag
+              catId={selectCat}
+              selectTag={(id: number) => setSelectTagId(id)}
+            />
           </div>
-          <h4 style={{ marginBottom: 16, marginTop: 10 }}>文章封面图</h4>
+          <h4 style={{ marginBottom: 10, marginTop: 10 }}>文章封面图</h4>
           <div>
-            {/* <AliOssUpload type="click" returnImageUrl={returnCoverImageUrl} /> */}
+            <SettingCoverImg />
           </div>
         </div>
       </Modal>
@@ -381,6 +481,9 @@ const Write: React.FC<WriteProps> = props => {
   );
 };
 
-export default connect(({ write }: { write: WriteState }) => ({
-  write,
-}))(Write);
+export default connect(
+  ({ write, draft }: { write: WriteState; draft: DraftState }) => ({
+    write,
+    draft,
+  }),
+)(Write);

@@ -33,7 +33,7 @@ const UserAvatar: React.FC<ComHeaderProps> = props => {
       history.push('/');
     }
     if (key === '1') {
-      history.push('/');
+      history.push('/drafts');
     }
     if (key === '2') {
       history.push('/userPage');
@@ -45,7 +45,7 @@ const UserAvatar: React.FC<ComHeaderProps> = props => {
       pageLogin();
     }
     if (key === '5') {
-      history.push('/write');
+      history.push('/write/new');
     }
   };
   const initMenu = () => {

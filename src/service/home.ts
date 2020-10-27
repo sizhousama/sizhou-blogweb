@@ -14,8 +14,9 @@ export async function getCategories():Promise<any> {
   })
 }
 // 标签
-export async function getTags():Promise<any> {
+export async function getTags(params:any):Promise<any> {
   return request('/tags', {
-    method: 'GET'
+    method: 'GET',
+    params
   })
 }

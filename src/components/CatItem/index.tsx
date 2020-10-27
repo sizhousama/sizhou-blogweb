@@ -35,14 +35,14 @@ const ArticleItem: React.FC<childProps> = props => {
     cat.tags.length>0?
     dispatch({type:'article/saveHomeTags',payload:{tags:cat.tags}}):
     dispatch({type:'article/getHomeTags'})
-    const catid = cat.id===0?'':String(cat.id)
+    const catid = cat.id===0?'':cat.id
     dispatch({type:'article/setCurCat',payload:{id:catid}})
     dispatch({type:'article/setCurTag',payload:{id:''}})
     handleClick(catid,'')
   }
   const clickTag = (cat:any,tag:any) =>{
-    const catid = cat.id===0?'':String(cat.id)
-    const tagid = String(tag.id)
+    const catid = cat.id===0?'':cat.id
+    const tagid = tag.id
     dispatch({type:'article/setCurCat',payload:{id:catid}})
     dispatch({type:'article/setCurTag',payload:{id:tagid}})
     handleClick(catid,tagid)

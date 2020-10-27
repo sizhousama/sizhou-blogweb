@@ -4,8 +4,8 @@ import { Row, Col } from 'antd';
 import ArticleList from '@/components/ArticleList';
 import HomeTags from '@/components/HomeTags';
 const Home: React.FC = props => {
-  const [htag,setHtag] = useState('')
-  const clickTag = (id:string)=>{
+  const [htag,setHtag] = useState<number|null>(null)
+  const clickTag = (id:number)=>{
     setHtag(id)
   }
   return (
