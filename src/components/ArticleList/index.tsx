@@ -17,56 +17,56 @@ import { ArtState, Loading } from '@/models/connect';
 interface ArticleListProps {
   dispatch: Dispatch;
   article: ArtState;
-  htag:number|null;
+  htag: number | null;
   loading?: boolean;
 }
 interface Params {
-  page:number;
-  size:number;
-  category:number|null;
-  tag:number|null;
-  orderType:string;
+  page: number;
+  size: number;
+  category: number | null;
+  tag: number | null;
+  orderType: string;
+  status: number;
 }
 
 const ArticleList: React.FC<ArticleListProps> = props => {
-  const { dispatch, loading, article,htag } = props;
-  const { arts, cats,curCat } = article;
+  const { dispatch, loading, article, htag } = props;
+  const { arts, cats, curCat } = article;
   const pref = useRef<Params>({
     page: 1,
     size: 10,
-    category:null,
+    category: null,
     tag: null,
     orderType: 'createdAt',
+    status: 1,
   });
   useEffect(() => {
     getCats();
     getArts();
   }, []);
-  useEffect(()=>{
-    catChange(curCat,htag)
-  },[htag])
+  useEffect(() => {
+    catChange(curCat, htag);
+  }, [htag]);
 
   const getCats = () => {
     dispatch({ type: 'article/categories' });
   };
-  
+
   const getArts = () => {
     dispatch({
       type: 'article/articles',
       payload: pref.current,
-      callback(res) {
-
-      },
+      callback(res) {},
     });
   };
-  const catChange = (catid:number|null,tagid:number|null)=>{
-    pref.current.category = catid
-    pref.current.tag = tagid
+  const catChange = (catid: number | null, tagid: number | null) => {
+    pref.current.category = catid;
+    pref.current.tag = tagid;
     dispatch({
       type: 'article/articles',
       payload: pref.current,
     });
-  }
+  };
 
   return (
     <>
@@ -74,11 +74,7 @@ const ArticleList: React.FC<ArticleListProps> = props => {
         <div className={`fl ${styles.catsinner}`}>
           {cats.map((item, index) => {
             return (
-              <CatItem
-                cat={item}
-                key={index}
-                handleClick={catChange}
-              ></CatItem>
+              <CatItem cat={item} key={index} handleClick={catChange}></CatItem>
             );
           })}
         </div>
@@ -90,7 +86,13 @@ const ArticleList: React.FC<ArticleListProps> = props => {
         loading={loading}
         renderItem={item => (
           <List.Item className={styles.artitem}>
-            <ArticleItem art={item}></ArticleItem>
+            <ArticleItem
+              art={item}
+              opts={false}
+              refresh={() => {
+                return;
+              }}
+            ></ArticleItem>
           </List.Item>
         )}
       />

@@ -5,24 +5,23 @@
  * @LastEditTime: 2020-09-16 09:52:15
  */
 
-import { Effect, Reducer } from 'umi'
+import { Effect, Reducer } from 'umi';
 
 export interface WriteState {
-  drafts: any[],
-  categories: any[], 
-  tags: any[], 
-  markdown: string, 
-  title: string,
-  selectedCategory: any,
-  selectedTag: any,
+  drafts: any[];
+  categories: any[];
+  tags: any[];
+  markdown: string;
+  title: string;
+  selectedCategory: any;
+  selectedTag: any;
+  curArtId: any;
 }
 
 export interface WriteType {
   namespace: 'write';
   state: WriteState;
-  effects: {
-    
-  };
+  effects: {};
   reducers: {
     save: Reducer<WriteState>;
     setMarkdown: Reducer<any>;
@@ -40,21 +39,20 @@ const WriteModel: WriteType = {
     title: '',
     selectedCategory: '',
     selectedTag: '',
+    curArtId: '',
   },
-  effects: {
-
-  },
+  effects: {},
   reducers: {
     save(state, { payload }) {
-      return { ...state, ...payload }
+      return { ...state, ...payload };
     },
     setMarkdown(state, { payload }) {
-      return { ...state, markdown: payload.markdown }
+      return { ...state, markdown: payload.markdown };
     },
     setTitle(state, { payload }) {
-      return { ...state, title: payload.title }
+      return { ...state, title: payload.title };
     },
   },
-}
+};
 
-export default WriteModel
+export default WriteModel;

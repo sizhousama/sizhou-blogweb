@@ -24,12 +24,6 @@
   margin-bottom: 16px;
 }
 
-.markdown-body blockquote {
-  padding: 0 1em;
-  color: #6a737d;
-  border-left: 0.25em solid #4680be;
-}
-
 .markdown-body code {
   background: #fff5f5;
   color: #ff502c;
@@ -44,13 +38,13 @@
 
 .markdown-body a {
   color: #0269c8;
-  border-bottom: 1px dashed #0269c8;
+  /* border-bottom: 1px dashed #0269c8; */
 }
 
 .markdown-body blockquote {
-  padding: 0 1em;
+  padding: 0.5em 1em;
   color: #728498;
-  border-left: 0.25em solid #6596ca;
+  border-left: 0.25em solid #cbcbcb;
   background: #fafafa;
 }
 

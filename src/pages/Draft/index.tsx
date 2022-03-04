@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import DraftItem from '@/components/DraftItem'
+import DraftItem from '@/components/DraftItem';
 import styles from './index.less';
 import { connect } from 'dva';
 import { List } from 'antd';
 import { Dispatch } from 'umi';
 import { DraftState, Loading } from '@/models/connect';
-import { Modal,message } from 'antd';
+import { Modal, message } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 interface DraftProps {
@@ -24,9 +24,9 @@ const Draft: React.FC<DraftProps> = props => {
   }, []);
 
   const getDrafts = () => {
-    dispatch({ type: 'draft/drafts'});
+    dispatch({ type: 'draft/drafts' });
   };
-  const deldraft = (id:Number)=>{
+  const deldraft = (id: Number) => {
     confirm({
       title: '该操作不可恢复，是否确定删除？',
       icon: <ExclamationCircleOutlined />,
@@ -35,17 +35,20 @@ const Draft: React.FC<DraftProps> = props => {
       okType: 'danger',
       cancelText: '否',
       onOk() {
-        dispatch({ type: 'draft/deldraft',payload:{id},callback(){
-          message.success('删除成功！')
-          getDrafts();
-        }});
+        dispatch({
+          type: 'draft/deldraft',
+          payload: { id },
+          callback() {
+            message.success('删除成功！');
+            getDrafts();
+          },
+        });
       },
       onCancel() {
         console.log('Cancel');
       },
     });
-    
-  }
+  };
   return (
     <>
       <div className={styles.head}>草稿箱（{drafts.length}）</div>

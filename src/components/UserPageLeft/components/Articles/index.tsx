@@ -50,7 +50,7 @@ const UserArts: React.FC<ArticleListProps> = props => {
         loading={loading}
         renderItem={item => (
           <List.Item className={styles.artitem}>
-            <ArticleItem art={item}></ArticleItem>
+            <ArticleItem art={item} opts={true} refresh={getArts}></ArticleItem>
           </List.Item>
         )}
       />

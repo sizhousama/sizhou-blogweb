@@ -1,0 +1,108 @@
+.commentbox {
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  margin-top: 20px;
+  padding: 22px;
+}
+.pulishbox {
+  padding: 20px 10px;
+  background: #fafbfc;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  &.top {
+    margin-bottom: 0;
+  }
+  &.white {
+    background: #fff;
+  }
+  :global {
+    .ant-comment-inner {
+      padding: 0;
+    }
+  }
+}
+.pulishbtn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.commentlist {
+  padding: 0 10px;
+  :global {
+    .ant-comment-actions {
+      margin-top: 5px;
+    }
+    .ant-list-item {
+      padding-bottom: 0;
+      border: none;
+      .ant-comment-nested {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f0f0f0;
+        .ant-comment {
+          .ant-comment-nested {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+          }
+          &:last-child {
+            .ant-comment-nested {
+              border: none;
+            }
+          }
+        }
+      }
+      &:last-child {
+        .ant-comment-nested {
+          border: none;
+        }
+      }
+    }
+  }
+  .cUser {
+    font-size: 16px;
+    color: #333;
+    .author {
+      margin-left: 5px;
+      font-size: 14px;
+    }
+  }
+  .cTime {
+    font-size: 12px;
+    color: #ccc;
+  }
+}
+.replyAct {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #bbb;
+  .replyicon {
+    margin-right: 5px;
+  }
+  &:hover {
+    color: #ccc;
+  }
+}
+.commentgrey {
+  width: 100%;
+  padding: 20px 10px;
+  background: #fafbfc;
+  border-radius: 4px;
+  :global {
+    .ant-comment-inner {
+      padding: 0;
+    }
+  }
+}
+.commentwhite {
+  width: 100%;
+  background: #fff;
+}
+.replyUser {
+  font-size: 12px;
+  a {
+    color: #406599;
+    margin-left: 5px;
+  }
+}

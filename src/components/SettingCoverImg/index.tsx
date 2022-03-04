@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import { Upload, message } from 'antd';
 import { LoadingOutlined, DeleteFilled } from '@ant-design/icons';
@@ -17,8 +17,12 @@ function beforeUpload(file: any) {
   }
   return isJpgOrPng && isLt3M;
 }
+interface ImgProps {
+  setCoverImg: (img: string) => void;
+  url: string;
+}
 
-const SettingCoverImg: React.FC = props => {
+const SettingCoverImg: React.FC<ImgProps> = props => {
   const [loading, setLoading] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
   const token = getToken();
@@ -32,15 +36,27 @@ const SettingCoverImg: React.FC = props => {
       setLoading(false);
       const Image = info.file.response.data.url;
       setImgUrl(Image);
+      props.setCoverImg(Image);
     }
   };
+  useEffect(() => {
+    if (props.url !== '') {
+      setImgUrl(props.url);
+    }
+  }, []);
 
   return (
     <>
       {imgUrl ? (
         <div className={styles.imgbox}>
           <img className={styles.image} src={imgUrl} />
-          <div className={styles.del} onClick={()=>setImgUrl('')}>
+          <div
+            className={styles.del}
+            onClick={() => {
+              setImgUrl('');
+              props.setCoverImg('');
+            }}
+          >
             <DeleteFilled />
           </div>
         </div>

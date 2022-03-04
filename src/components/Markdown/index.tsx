@@ -5,21 +5,22 @@
  * @Last Modified time: 2020-05-17 19:03:59
  */
 
-import React from 'react'
-import ReactMarkdown from 'react-markdown'
-import CodeTag from './CodeTag'
-import ImageTag from './ImageTag'
-import HeadTag from './HeadTag'
-import MathTag from './MathTag'
-import MathInline from './MathInline'
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import CodeTag from './CodeTag';
+import ImageTag from './ImageTag';
+import HeadTag from './HeadTag';
+import MathTag from './MathTag';
+import MathInline from './MathInline';
 
-const Markdown = (props:any) => {
-  const { markdown } = props
+const Markdown = (props: any) => {
+  const { markdown } = props;
   return (
     <ReactMarkdown
       source={markdown}
       linkTarget={() => '_blank'}
       plugins={[[require('remark-math')]]}
+      escapeHtml={false}
       renderers={{
         code: CodeTag,
         image: ImageTag,
@@ -28,7 +29,7 @@ const Markdown = (props:any) => {
         inlineMath: MathInline,
       }}
     />
-  )
-}
+  );
+};
 
-export default Markdown
+export default Markdown;

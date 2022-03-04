@@ -1,7 +1,7 @@
 import { extend } from 'umi-request';
 import { message } from 'antd';
 import { history } from 'umi';
-import { getToken, pageLogin } from './utils'
+import { getToken, pageLogin } from './utils';
 const baseUrl = process.env.BASE_URL;
 
 const codeMessage: any = {
@@ -39,26 +39,25 @@ type mapCode =
   | 503
   | 504;
 
-
 /**
  * 异常处理程序
  */
 const errorHandler = (error: { response: any }): Response => {
   const { response } = error;
-  console.log('errorhandler:', error)
+  console.log('errorhandler:', error);
   let errortext = codeMessage[response.status] || response.message;
   const { code } = response;
-  const token = getToken()
+  const token = getToken();
   if (code === 400 && !token) {
-    errortext = '用户名或密码错误'
+    errortext = '用户名或密码错误';
     message.error(errortext);
   }
   if (code === 401) {
-    errortext = `登录已过期，请重新登录`
+    errortext = `登录已过期，请重新登录`;
     message.error(errortext);
-    pageLogin()
+    pageLogin();
   }
-  return response
+  return response;
 };
 
 const request = extend({
@@ -69,38 +68,42 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url: string, options: any) => {
-  const token = getToken()
-  const headers = token ? {
-    'Content-Type': 'application/json',
-    'token': token
-  } : { 'Content-Type': 'application/json' }
-  return (
-    {
-      url: `${baseUrl}${url}`,
-      options: {
-        ...options,
-        headers
+  const token = getToken();
+  const headers = token
+    ? {
+        'Content-Type': 'application/json',
+        token: token,
       }
-    }
-  );
+    : { 'Content-Type': 'application/json' };
+  return {
+    url: `${baseUrl}${url}`,
+    options: {
+      ...options,
+      headers,
+    },
+  };
 });
 
 // response拦截器, 处理response
-request.interceptors.response.use(async (response: any): Promise<any> => {
-  let obj = {}
-  await response.clone().json().then((res: any) => {
-    const { code, status, msg } = res
-    if (status !== 1) {
-      message.error(msg)
-      if (code && code === 401) {
-        pageLogin()
-        window.location.reload()
-      }
-    }
-    obj = res
-  })
-  return obj
-});
-
+request.interceptors.response.use(
+  async (response: any): Promise<any> => {
+    let obj = {};
+    await response
+      .clone()
+      .json()
+      .then((res: any) => {
+        const { code, status, msg } = res;
+        if (status !== 1) {
+          message.error(msg);
+          // if (code && code === 401) {
+          //   pageLogin()
+          //   window.location.reload()
+          // }
+        }
+        obj = res;
+      });
+    return obj;
+  },
+);
 
 export default request;
