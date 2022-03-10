@@ -4,7 +4,12 @@
  * @LastEditors: sizhou
  * @LastEditTime: 2020-11-05 18:21:59
  */
-import { articleDetail, getComments, addComment } from '@/service/detail';
+import {
+  articleDetail,
+  getComments,
+  addComment,
+  delComment,
+} from '@/service/detail';
 import { Effect, Reducer } from 'umi';
 
 export interface DetailState {
@@ -20,6 +25,7 @@ export interface DetailType {
     getComments: Effect;
     closeAddComments: Effect;
     addComment: Effect;
+    delComment: Effect;
   };
   reducers: {
     save: Reducer<DetailState>;
@@ -106,6 +112,18 @@ const DetailModel: DetailType = {
         type: 'save',
         payload: {
           comments,
+        },
+      });
+    },
+    *delComment({ payload }, { call, put, select }) {
+      yield call(delComment, payload);
+      yield put({
+        type: 'getComments',
+        payload: {
+          page: 1,
+          size: 10,
+          articleId: payload.articleId,
+          more: false,
         },
       });
     },

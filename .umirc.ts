@@ -7,7 +7,7 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
-  title: 'sizhouのweb',
+  title: 'sizhou 技术网',
   favicon: '/favicon.ico',
   routes: [
     { path: '/register', component: '../pages/Register/index' },

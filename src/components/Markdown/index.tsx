@@ -10,23 +10,17 @@ import ReactMarkdown from 'react-markdown';
 import CodeTag from './CodeTag';
 import ImageTag from './ImageTag';
 import HeadTag from './HeadTag';
-import MathTag from './MathTag';
-import MathInline from './MathInline';
 
 const Markdown = (props: any) => {
   const { markdown } = props;
   return (
     <ReactMarkdown
-      source={markdown}
+      children={markdown}
       linkTarget={() => '_blank'}
-      plugins={[[require('remark-math')]]}
-      escapeHtml={false}
-      renderers={{
+      components={{
         code: CodeTag,
         image: ImageTag,
-        heading: HeadTag,
-        math: MathTag,
-        inlineMath: MathInline,
+        head: HeadTag,
       }}
     />
   );

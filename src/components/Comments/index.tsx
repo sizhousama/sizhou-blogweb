@@ -1,8 +1,20 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styles from './index.less';
 import moment from 'moment';
-import { Comment, Avatar, Button, List, Input, message } from 'antd';
-import { UserOutlined, MessageOutlined } from '@ant-design/icons';
+import {
+  Comment,
+  Avatar,
+  Button,
+  List,
+  Input,
+  message,
+  Popconfirm,
+} from 'antd';
+import {
+  UserOutlined,
+  MessageOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 import { history, Dispatch } from 'umi';
 import { connect } from 'dva';
 import { DetailState, UserState } from '@/models/connect';
@@ -132,7 +144,7 @@ const Comments: React.FC<ComProps> = props => {
     }
 
     const payload = {
-      content: commentValue,
+      content: top ? topValue : commentValue,
       articleId: artDetail.id,
       author: artDetail.uid,
       replyId: top ? artDetail.uid : replyId,
@@ -169,7 +181,10 @@ const Comments: React.FC<ComProps> = props => {
       <Comment
         key={key}
         className={isreply ? styles.commentgrey : styles.commentwhite}
-        actions={[handelReply(item, parent)]}
+        actions={[
+          handelReply(item, parent),
+          item.user.id === userInfo.id && handelDel(item),
+        ]}
         author={
           item.user && (
             <span className={styles.cUser}>
@@ -236,6 +251,26 @@ const Comments: React.FC<ComProps> = props => {
     setReplyId(item.user.id);
     setparentId(parent ? parent.id : item.id);
     e.nativeEvent.stopImmediatePropagation(); //阻止冒泡
+  };
+  // 删除组件
+  const handelDel = (item: any) => {
+    return (
+      <div className={styles.replyAct}>
+        <Popconfirm
+          title="是否确定删除此条评论?"
+          onConfirm={() => clickDel(item)}
+          okText="是"
+          cancelText="否"
+        >
+          <DeleteOutlined className={styles.delicon} />
+        </Popconfirm>
+      </div>
+    );
+  };
+  // 点击删除
+  const clickDel = (item: any) => {
+    const payload = { id: item.id, articleId: artDetail.id };
+    dispatch({ type: 'detail/delComment', payload });
   };
   return (
     <div className={styles.commentbox}>
