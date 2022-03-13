@@ -6,6 +6,7 @@ import ArticleAnchor from '@/components/ArticleAnchor';
 import AuthorInfo from '@/components/AuthorInfo';
 import { Dispatch, connect } from 'umi';
 import { DetailState } from '@/models/connect';
+import { getBrowser } from '@/utils/utils';
 interface ARTDETAIL {
   dispatch: Dispatch;
   match: any;
@@ -14,6 +15,7 @@ interface ARTDETAIL {
 const Article: React.FC<ARTDETAIL> = props => {
   const { dispatch, match, detail } = props;
   const { artDetail } = detail;
+  const mobile = getBrowser().isMobile;
   const commentParams = useRef({
     page: 1,
     size: 10,
@@ -34,11 +36,11 @@ const Article: React.FC<ARTDETAIL> = props => {
   };
   return (
     <>
-      <Row gutter={20}>
-        <Col span={17}>
+      <Row gutter={mobile ? 0 : 20}>
+        <Col span={mobile ? 24 : 17}>
           <ArticleDetail></ArticleDetail>
         </Col>
-        <Col span={7}>
+        <Col span={mobile ? 0 : 7}>
           <AuthorInfo></AuthorInfo>
           <ArticleAnchor></ArticleAnchor>
         </Col>

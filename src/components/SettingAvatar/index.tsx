@@ -20,11 +20,11 @@ function beforeUpload(file: any) {
   if (!isJpgOrPng) {
     message.error('只能上传jpe/jpeg/png格式的图片！');
   }
-  const isLt3M = file.size / 1024 / 1024 < 3;
-  if (!isLt3M) {
-    message.error('图片大小必须小于3M！');
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('图片大小必须小于2M！');
   }
-  return isJpgOrPng && isLt3M;
+  return isJpgOrPng && isLt2M;
 }
 
 const SettingAvatar: React.FC<AvatarProps> = props => {
@@ -41,10 +41,10 @@ const SettingAvatar: React.FC<AvatarProps> = props => {
     }
     if (info.file.status === 'done') {
       setLoading(false);
-      const avatar = info.file.response.data.url
+      const avatar = info.file.response.data.url;
       dispatch({
         type: 'user/updateUser',
-        payload: {avatar},
+        payload: { avatar },
         callback(data) {
           setImgUrl(data.avatar);
         },

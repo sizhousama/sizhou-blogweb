@@ -6,12 +6,9 @@ import UserPageLeft from '@/components/UserPageLeft';
 const User: React.FC = props => {
   return (
     <>
-      <Row gutter={20} >
-        <Col span={17}>
+      <Row gutter={0}>
+        <Col span={24}>
           <UserPageLeft></UserPageLeft>
-        </Col>
-        <Col span={7}>
-          
         </Col>
       </Row>
     </>
