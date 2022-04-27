@@ -37,7 +37,7 @@ const ArticleDetail: React.FC<ARTDET> = props => {
           ) : (
             ''
           )}
-          <div className="markdown-body">
+          <div className={styles.markdownBody}>
             <p style={{ fontSize: 30 + 'px', fontWeight: 600 }}>
               {artDetail.title}
             </p>
