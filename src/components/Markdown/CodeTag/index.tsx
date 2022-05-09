@@ -1,28 +1,30 @@
 /*
- * @Author: 柒叶
+ * @Author: sizhou
  * @Date: 2020-04-16 06:35:02
- * @Last Modified by: 柒叶
+ * @Last Modified by: sizhou
  * @Last Modified time: 2020-05-13 16:32:50
  */
 
-import React from 'react'
+import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { okaidia} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-
-const CodeTag = (props:any) => {
-  const { value, language } = props
-
-  if (!value) return null
-  return (
+const CodeTag = (props: any) => {
+  const { node, inline, className, children } = props;
+  const match = /language-(\w+)/.exec(className || '');
+  return !inline && match ? (
     <SyntaxHighlighter
-      language={language}
+      children={String(children).replace(/\n$/, '')}
       style={okaidia}
-      showLineNumbers={true}
-    >
-      {value}
-    </SyntaxHighlighter>
-  )
-}
+      language={match[1]}
+      PreTag="div"
+      {...props}
+    />
+  ) : (
+    <code className={className} {...props}>
+      {children}
+    </code>
+  );
+};
 
-export default CodeTag
+export default CodeTag;

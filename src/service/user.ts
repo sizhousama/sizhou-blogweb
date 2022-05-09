@@ -7,39 +7,47 @@
 import request from '@/utils/request';
 
 // 注册
-export async function register(data:any):Promise<any> {
+export async function register(data: any): Promise<any> {
   return request('/user/register', {
     method: 'POST',
-    data
-  })
+    data,
+  });
 }
 
 // 登录
-export async function login(data:any):Promise<any> {
+export async function login(data: any): Promise<any> {
   return request('/user/login', {
     method: 'POST',
-    data
-  })
+    data,
+  });
 }
 // 用户信息
-export async function getUserInfo():Promise<any> {
+export async function getUserInfo(): Promise<any> {
   return request(`/user/info`, {
-    method: 'GET'
-  })
+    method: 'GET',
+  });
 }
 
 // 编辑用户信息
-export async function updateUserInfo(data:any):Promise<any> {
+export async function updateUserInfo(data: any): Promise<any> {
   return request(`/user/updateUserInfo`, {
     method: 'POST',
-    data
-  })
+    data,
+  });
+}
+
+// 修改密码
+export async function repassword(data: any): Promise<any> {
+  return request(`/user/repassword`, {
+    method: 'POST',
+    data,
+  });
 }
 
 // 用户文章
-export async function userArts(params:any):Promise<any> {
+export async function userArts(params: any): Promise<any> {
   return request(`/user/articles`, {
     method: 'GET',
-    params
-  })
+    params,
+  });
 }

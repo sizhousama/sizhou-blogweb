@@ -10,6 +10,7 @@ import {
   getUserInfo,
   updateUserInfo,
   userArts,
+  repassword,
 } from '@/service/user';
 import { pageLogin, setToken } from '@/utils/utils';
 import { Effect, Reducer, history } from 'umi';
@@ -40,6 +41,7 @@ export interface UserType {
     updateUser: Effect;
     getuserarts: Effect;
     moreuserarts: Effect;
+    repassword: Effect;
   };
   reducers: {
     save: Reducer<UserState>;
@@ -124,6 +126,17 @@ const UserModel: UserType = {
       });
       if (callback) {
         callback(data);
+      }
+    },
+    *repassword({ payload, callback }, { call, put }) {
+      const { newpassword, renewpassword } = payload;
+      if (newpassword !== renewpassword) {
+        message.error('两次密码不一致！');
+        return false;
+      }
+      const { data } = yield call(repassword, payload);
+      if (data) {
+        message.success('更改成功！');
       }
     },
   },
